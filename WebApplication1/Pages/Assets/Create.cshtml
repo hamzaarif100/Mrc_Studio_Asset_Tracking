@@ -1,0 +1,101 @@
+﻿@page
+@model WebApplication1.Pages.Assets.CreateModel
+@{
+}
+
+<br>
+<h2>New Asset</h2>
+
+@if (Model.errorMessage.Length > 0) {
+    <div class='alert alert-warning alert.dismissible fade show' role='alert'>
+        <strong>@Model.errorMessage</strong>
+        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+    </div>
+}
+<form method="POST">
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Asset ID</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="id" value="@Model.assetInfo.id" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Asset Name</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="assetName" value="@Model.assetInfo.assetName" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Asset Tag</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="assetTag" value="@Model.assetInfo.assetTag" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Usage Tags</label>
+        <div class="col-sm-6">
+            <select class="form-select" name="usageTag" multiple>
+                <option value="">Select Usage Tag</option>
+                <option value="MOCAP">MOCAP</option>
+                <option value="VR">VR</option>
+                <option value="Capture Devices">Capture Devices</option>
+                <option value="Gaming">Gaming</option>
+                <option value="Virtual Production">Virtual Production</option>
+                <option value="Computers">Computers</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+                <option value="N/A">N/A</option>
+                <!-- Add more options as needed -->
+            </select>
+        </div>
+    </div>
+
+    <script>
+        // Enable multiple selections
+        var selectElement = document.querySelector('select[name="usageTag"]');
+        selectElement.addEventListener('mousedown', function (e) {
+            e.preventDefault();
+            var originalScrollTop = this.scrollTop;
+            e.target.selected = !e.target.selected;
+            setTimeout(function () {
+                this.scrollTop = originalScrollTop;
+            }.bind(this), 0);
+
+            return false;
+        });
+    </script>
+
+    
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">Location</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="location" value="@Model.assetInfo.location" />
+        </div>
+    </div>
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label">First Name</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" name="firstName" value="@Model.assetInfo.userName" />
+        </div>
+    </div>
+
+
+    @if (Model.successMessage.Length > 0) {
+        <div class="row mb-3">
+            <div class="col-sm-9">
+                <div class='alert alert-warning alert.dismissible fade show' role='alert'>
+                    <strong>@Model.successMessage</strong>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row mb-3">
+        <div class="offset-sm-3 col-sm-3 d-grid">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="col-sm-3 d-grid">
+            <a class="btn btn-outline-primary" href="/" role="button">Cancel</a>
+        </div>
+    </div>
+</form>

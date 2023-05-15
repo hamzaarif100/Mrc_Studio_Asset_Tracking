@@ -1,0 +1,162 @@
+﻿@page
+@model WebApplication1.Pages.Assets.IndexModel
+@{
+    var usageTags = new List<string>() { "MOCAP", "VR", "Capture Devices", "Gaming", "Virtual Production", "Computers", "Miscellaneous", "N/A" }; // Add your desired usage tags here
+    var selectedUsageTag = Request.Query["usageTag"];
+    var selectedTagValue = selectedUsageTag.ToString();
+    var selectedTagValues = selectedTagValue.Split(',');
+
+    var locations = new List<string>() { "MRC STUDIO", "OFFSITE", "OFFLINE" }; // Add your desired locations here
+    var selectedLocation = Request.Query["location"];
+    var selectedLocationValue = selectedLocation.ToString();
+    
+    var queryParam = "";
+}
+
+<br>
+<h2>List of Assets</h2>
+
+<div class="mb-3">
+    <label for="usageTagFilter" class="form-label">Filter by Usage Tag:</label>
+    <select class="form-select" id="usageTagFilter" onchange="handleFilterChange()" multiple>
+        <option value="">All</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label for="locationFilter" class="form-label">Filter by Location:</label>
+    <select class="form-select" id="locationFilter" onchange="handleFilterChange()">
+        <option value="">All</option>
+    </select>
+</div>
+
+<script>
+    var usageTags = @Json.Serialize(usageTags);
+    var selectedTagValues = @Json.Serialize(selectedTagValues);
+
+    var locations = @Json.Serialize(locations);
+    var selectedLocationValue = "@selectedLocationValue";
+
+    var usageTagFilter = document.getElementById("usageTagFilter");
+    var locationFilter = document.getElementById("locationFilter");
+
+    usageTags.forEach(function (tag) {
+        var option = document.createElement("option");
+        option.text = tag;
+        option.value = tag;
+        if (selectedTagValues.includes(tag)) {
+            option.selected = true;
+        }
+        usageTagFilter.appendChild(option);
+    });
+
+    locations.forEach(function (location) {
+        var option = document.createElement("option");
+        option.text = location;
+        option.value = location;
+        if (location === selectedLocationValue) {
+            option.selected = true;
+        }
+        locationFilter.appendChild(option);
+    });
+
+    function handleFilterChange() {
+        var selectedUsageTags = Array.from(usageTagFilter.selectedOptions, option => option.value).join(",");
+        var selectedLocation = locationFilter.value;
+
+        var url = window.location.pathname;
+        var params = new URLSearchParams(window.location.search);
+
+        if (selectedUsageTags) {
+            params.set('usageTag', selectedUsageTags);
+        } else {
+            params.delete('usageTag');
+        }
+
+        if (selectedLocation) {
+            params.set('location', selectedLocation);
+        } else {
+            params.delete('location');
+        }
+
+        window.location.href = url + "?" + params.toString();
+    }
+</script>
+
+<a class='btn btn-primary btn-sm' href='/Assets/Create'>New Asset</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Asset Name</th>
+            <th>Asset Tag</th>
+            <th>Usage Tag</th>
+            <th>Location</th>
+            <th>User Full Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.listAssets.Where(asset =>
+        (string.IsNullOrEmpty(selectedTagValue) || asset.usageTag.Split(',').Any(tag => selectedTagValues.Contains(tag.Trim()))) &&
+        (string.IsNullOrEmpty(selectedLocationValue) || asset.location == selectedLocationValue)))
+        {
+            <tr>
+                <td>@item.id</td>
+                <td>@item.assetName</td>
+                <td>@item.assetTag</td>
+                <td>@item.usageTag</td>
+                <td>@item.location</td>
+                <td>@item.userName</td>
+                <td>
+                    <a class="btn btn-primary btn-sm" href="/Assets/Edit?id=@item.id">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/Assets/Delete?id=@item.id" onclick="return confirm('Are you sure you want to delete this asset?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+<script>
+    var selectedTagValues = @Json.Serialize(selectedTagValues);
+    var selectedLocationValue = "@selectedLocationValue";
+    var usageTagFilter = document.getElementById("usageTagFilter");
+var locationFilter = document.getElementById("locationFilter");
+
+selectedTagValues.forEach(function (tag) {
+    var option = Array.from(usageTagFilter.options).find(option => option.value === tag);
+    if (option) {
+        option.selected = true;
+    }
+});
+
+locationFilter.value = selectedLocationValue;
+
+function handleFilterChange() {
+    var selectedTagValues = Array.from(usageTagFilter.selectedOptions, option => option.value);
+    var selectedLocationValue = locationFilter.value;
+
+    var url = window.location.pathname;
+    var params = new URLSearchParams(window.location.search);
+
+    if (selectedTagValues.length > 0) {
+        params.set('usageTag', selectedTagValues.join(","));
+    } else {
+        params.delete('usageTag');
+    }
+
+    if (selectedLocationValue) {
+        params.set('location', selectedLocationValue);
+    } else {
+        params.delete('location');
+    }
+    window.location.href = url + "?" + params.toString();
+}
+</script>
+
+
+
+
+
+
+
