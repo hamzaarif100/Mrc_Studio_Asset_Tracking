@@ -19,7 +19,7 @@ namespace WebApplication1.Pages.Assets
             assetInfo.assetTag = Request.Form["assetTag"];
             assetInfo.usageTag = Request.Form["usageTag"];
             assetInfo.location = Request.Form["location"];
-            assetInfo.userName = Request.Form["firstName"];
+            assetInfo.userFirstName = Request.Form["firstName"];
 
             if (assetInfo.id.Length == 0 || assetInfo.assetName.Length == 0 ||
                 assetInfo.usageTag.Length == 0)
@@ -46,7 +46,7 @@ namespace WebApplication1.Pages.Assets
                         command.Parameters.AddWithValue("@assetTag", assetInfo.assetTag);
                         command.Parameters.AddWithValue("@usageTag", assetInfo.usageTag);
                         command.Parameters.AddWithValue("@location", assetInfo.location);
-                        command.Parameters.AddWithValue("@userFirstName", assetInfo.userName);
+                        command.Parameters.AddWithValue("@userFirstName", assetInfo.userFirstName);
 
                         command.ExecuteNonQuery();
                     }
@@ -63,7 +63,7 @@ namespace WebApplication1.Pages.Assets
             assetInfo.assetTag = "";
             assetInfo.usageTag = "";
             assetInfo.location = "";
-            assetInfo.userName = "";
+            assetInfo.userFirstName = "";
             successMessage = "New Asset Added Successfully!"; 
 
             Response.Redirect("/Assets/Index");

@@ -29,7 +29,7 @@ namespace WebApplication1.Pages.Assets
                                 assetInfo.assetTag = reader.GetString(2);
                                 assetInfo.usageTag = reader.GetString(3);
                                 assetInfo.location = reader.GetString(4);
-                                assetInfo.userName = reader.GetString(5);
+                                assetInfo.userFirstName = reader.GetString(5);
 
                                 listAssets.Add(assetInfo);
                             }
@@ -51,6 +51,6 @@ namespace WebApplication1.Pages.Assets
         public String assetTag;
         public String usageTag;
         public String location;
-        public String userName;
+        public String userFirstName;
     }
 }

@@ -33,7 +33,7 @@ namespace WebApplication1.Pages.Assets
                                 assetInfo.assetTag = reader.GetString(2);
                                 assetInfo.usageTag = reader.GetString(3);
                                 assetInfo.location = reader.GetString(4);
-                                assetInfo.userName = reader.GetString(5);
+                                assetInfo.userFirstName = reader.GetString(5);
                             }
                         }
                     }
@@ -47,20 +47,15 @@ namespace WebApplication1.Pages.Assets
 
         public void OnPost()
         {
+
+
+
             assetInfo.id = Request.Form["id"];
             assetInfo.assetName = Request.Form["assetName"];
             assetInfo.assetTag = Request.Form["assetTag"];
             assetInfo.usageTag = Request.Form["usageTag"];
             assetInfo.location = Request.Form["location"];
-            assetInfo.userName = Request.Form["firstName"];
-
-            if (assetInfo.id.Length == 0 || assetInfo.assetName.Length == 0 || assetInfo.assetTag.Length == 0 ||
-                assetInfo.usageTag.Length == 0 || assetInfo.location.Length == 0 || assetInfo.userName.Length == 0)
-            {
-                errorMessage = "All the fields are required!";
-                return;
-            }
-
+            assetInfo.userFirstName = Request.Form["userFirstName"];
             try
             {
                 String connectionString = "Data Source=ASUS-LAPTOP;Initial Catalog=AssetTracking;Integrated Security=True";
@@ -68,22 +63,24 @@ namespace WebApplication1.Pages.Assets
                 {
                     connection.Open();
                     String sql = "UPDATE Assets " +
-                                 "SET id=@id, assetName=@assetName, assetTag=@assetTag, usageTag=@usageTag, location=@location, userFirstName=@userFirstName, userLastName=@userLastName" +
-                                 "WHERE id=@id";
+                                 "SET AssetName=@assetName, AssetTag=@assetTag, UsageTag=@usageTag, Location=@location, UserFirstName=@userFirstName " +
+                                 "WHERE ID=@id";
+
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@id", assetInfo.id);
+                        
                         command.Parameters.AddWithValue("@assetName", assetInfo.assetName);
                         command.Parameters.AddWithValue("@assetTag", assetInfo.assetTag);
                         command.Parameters.AddWithValue("@usageTag", assetInfo.usageTag);
                         command.Parameters.AddWithValue("@location", assetInfo.location);
-                        command.Parameters.AddWithValue("@userFirstName", assetInfo.userName);
-
+                        command.Parameters.AddWithValue("@userFirstName", assetInfo.userFirstName);
+                        command.Parameters.AddWithValue("@id", assetInfo.id);
+                        
                         command.ExecuteNonQuery();
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 errorMessage = ex.Message;
                 return;
