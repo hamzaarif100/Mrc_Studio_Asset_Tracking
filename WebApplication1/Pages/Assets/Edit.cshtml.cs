@@ -62,6 +62,7 @@ namespace WebApplication1.Pages.Assets
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
+
                     String sql = "UPDATE Assets " +
                                  "SET AssetName=@assetName, AssetTag=@assetTag, UsageTag=@usageTag, Location=@location, UserFirstName=@userFirstName " +
                                  "WHERE ID=@id";

@@ -88,33 +88,69 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Asset Name</th>
-            <th>Asset Tag</th>
-            <th>Usage Tag</th>
-            <th>Location</th>
-            <th>User Full Name</th>
+            <th><a href="#" onclick="handleSort('id')">ID</a></th>
+            <th><a href="#" onclick="handleSort('assetName')">Asset Name</a></th>
+            <th><a href="#" onclick="handleSort('assetTag')">Asset Tag</a></th>
+            <th><a href="#" onclick="handleSort('usageTag')">Usage Tag</a></th>
+            <th><a href="#" onclick="handleSort('location')">Location</a></th>
+            <th><a href="#" onclick="handleSort('userFullName')">User Full Name</a></th>
         </tr>
     </thead>
+
     <tbody>
-        @foreach (var item in Model.listAssets.Where(asset =>
-        (string.IsNullOrEmpty(selectedTagValue) || asset.usageTag.Split(',').Any(tag => selectedTagValues.Contains(tag.Trim()))) &&
-        (string.IsNullOrEmpty(selectedLocationValue) || asset.location == selectedLocationValue)))
-        {
-            <tr>
-                <td>@item.id</td>
-                <td>@item.assetName</td>
-                <td>@item.assetTag</td>
-                <td>@item.usageTag</td>
-                <td>@item.location</td>
-                <td>@item.userFirstName</td>
-                <td>
-                    <a class="btn btn-primary btn-sm" href="/Assets/Edit?id=@item.id">Edit</a>
-                    <a class="btn btn-danger btn-sm" href="/Assets/Delete?id=@item.id" onclick="return confirm('Are you sure you want to delete this asset?')">Delete</a>
-                </td>
-            </tr>
+        @{
+            var sortBy = Request.Query["sortBy"];
+
+            var sortedAssets = Model.listAssets;
+
+            if (!string.IsNullOrEmpty(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "id":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.id).ToList();
+                        break;
+                    case "assetName":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.assetName).ToList();
+                        break;
+                    case "assetTag":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.assetTag).ToList();
+                        break;
+                    case "usageTag":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.usageTag).ToList();
+                        break;
+                    case "location":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.location).ToList();
+                        break;
+                    case "userFullName":
+                        sortedAssets = sortedAssets.OrderBy(asset => asset.userFirstName).ToList();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            foreach (var item in sortedAssets.Where(asset =>
+            (string.IsNullOrEmpty(selectedTagValue) || asset.usageTag.Split(',').Any(tag => selectedTagValues.Contains(tag.Trim()))) &&
+            (string.IsNullOrEmpty(selectedLocationValue) || asset.location == selectedLocationValue)))
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.assetName</td>
+                    <td>@item.assetTag</td>
+                    <td>@item.usageTag</td>
+                    <td>@item.location</td>
+                    <td>@item.userFirstName</td>
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="/Assets/Edit?id=@item.id">Edit</a>
+                        <a class="btn btn-danger btn-sm" href="/Assets/Delete?id=@item.id" onclick="return confirm('Are you sure you want to delete this asset?')">Delete</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
+
+
 
 </table>
 <script>
@@ -153,6 +189,17 @@ function handleFilterChange() {
     window.location.href = url + "?" + params.toString();
 }
 </script>
+<script>
+    function handleSort(headerName) {
+        var url = window.location.pathname;
+        var params = new URLSearchParams(window.location.search);
+
+        params.set('sortBy', headerName);
+
+        window.location.href = url + "?" + params.toString();
+    }
+</script>
+
 
 
 

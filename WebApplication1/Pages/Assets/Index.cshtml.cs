@@ -16,11 +16,14 @@ namespace WebApplication1.Pages.Assets
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
+                    
                     String sql = "SELECT * FROM Assets";
                     using (SqlCommand command = new SqlCommand(sql, connection))
                     {
+                        
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
+                            
                             while (reader.Read())
                             {
                                 AssetInfo assetInfo = new AssetInfo();
@@ -31,7 +34,7 @@ namespace WebApplication1.Pages.Assets
                                 assetInfo.location = reader.GetString(4);
                                 assetInfo.userFirstName = reader.GetString(5);
 
-                                listAssets.Add(assetInfo);
+                                listAssets.Add(assetInfo);                   
                             }
                         }
                     }    
