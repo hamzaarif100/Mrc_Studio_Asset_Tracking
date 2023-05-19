@@ -21,10 +21,14 @@ namespace WebApplication1.Pages.Assets
             assetInfo.location = Request.Form["location"];
             assetInfo.userFirstName = Request.Form["firstName"];
 
-            if (assetInfo.id.Length == 0 || assetInfo.assetName.Length == 0 ||
-                assetInfo.usageTag.Length == 0)
+            if (assetInfo.id.Length == 0)
             {
-                errorMessage = "All the fields are required!";
+                errorMessage = "Asset ID is required!";
+                return;
+            }
+            else if (assetInfo.assetName.Length == 0)
+            {
+                errorMessage = "Asset Name is required!";
                 return;
             }
 
